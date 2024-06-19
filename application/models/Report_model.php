@@ -285,6 +285,14 @@ class Report_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+	
+	// Get tanggal
+	public function get_tanggal_for_fase_layer($id_peternakan)
+	{
+		$query = $this->db->select('tanggal_prod')->where('peternakan_id', $id_peternakan)->get('produksi')->result();
+		$tanggal_produksi = array_column($query, 'tanggal_prod');
+        return $tanggal_produksi	;
+	}
 
 	// Tambah
 	public function insert_grower($data)

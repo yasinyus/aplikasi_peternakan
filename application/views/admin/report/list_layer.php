@@ -101,22 +101,25 @@
                                 <div class="form-group">
                                     <label for="">Tgl Awal</label>
                                     <div id="rentang_waktu_awal"></div>
-                                    <?php if($this->input->get('tgl_awal')){ ?>
+                                    <!-- <?php if($this->input->get('tgl_awal')){ ?>
                                         <input type="date" class="form-control" name="tgl_awal" id="tgl_awal" value="<?= $this->input->get('tgl_awal') ?>" >
                                     <?php } else {?>
                                         <input type="date" class="form-control" name="tgl_awal" id="tgl_awal" >
-                                    <?php }?>
+                                    <?php }?> -->
+                                    <input type="text" id="tgl_awal" class="form-control" placeholder="Pilih Tanggal" name="tgl_awal" autocomplete="off"/>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Tgl Akhir</label>
                                     <div id="rentang_waktu_akhir"></div>
-                                    <?php if($this->input->get('tgl_akhir')){ ?>
+                                    <!-- <?php if($this->input->get('tgl_akhir')){ ?>
                                         <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir" value="<?= $this->input->get('tgl_akhir') ?>" >
                                     <?php } else {?>
                                         <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir" >
-                                    <?php  }?>
+                                    <?php  }?> -->
+                                    <input type="text" id="tgl_akhir" class="form-control" placeholder="Pilih Tanggal" name="tgl_akhir" autocomplete="off"/>
+                                    <p id="custom_tgl" class="btn btn-outline-secondary btn-block mt-1">Custom Tanggal</p>
                                 </div>
                             </div>
                             
@@ -152,9 +155,9 @@
                                 Lokasi : <?= $_GET['pet']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Flock : <?= $_GET['flo']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Kandang : <?= $_GET['kan']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                 Periode : <?= $_GET['periode']?> Hari Terakhir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                Tgl Awal : <?= $_GET['tgl_awal']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                Tgl Akhir : <?= $_GET['tgl_akhir']?> &nbsp;&nbsp;
+                                 Periode : <?= $_GET['periode'] ?? '' ?> Hari Terakhir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Tgl Awal : <?= $_GET['tgl_awal'] ?? '' ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Tgl Akhir : <?= $_GET['tgl_akhir'] ?? '' ?> &nbsp;&nbsp;
                                 
                                 <?php } ?>
                             </div>
@@ -248,7 +251,7 @@
                                                  <?php }  ?> 
                                             </tbody>
                                         </table>
-
+                    
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
               		<script>
 						$(document).ready(function() {
@@ -271,6 +274,85 @@
 							})
 						});
 					</script>
+                    <script>
+                        $(document).ready(function () {
+                            const selectableDates = <?php echo json_encode($tanggal_prod); ?>;
+    
+                            function setPlaceholders() {
+                                const today = new Date();
+                                const yesterday = new Date(today);
+                                yesterday.setDate(yesterday.getDate() - 1);
+
+                                const formatDate = (date) => $.datepicker.formatDate('yy-mm-dd', date);
+
+                                $('#tgl_awal').attr('placeholder', formatDate(yesterday));
+                                $('#tgl_akhir').attr('placeholder', formatDate(today));
+                            }
+                            setPlaceholders();
+
+                            function available(date) {
+                                const dateString = $.datepicker.formatDate("yy-mm-dd", date);
+                                return [selectableDates.indexOf(dateString) !== -1, ""];
+                            }
+
+                            $("#tgl_awal").datepicker({
+                                dateFormat: "yy-mm-dd",
+                                numberOfMonths: 2,
+                                beforeShowDay: available,
+                                onSelect: function(selectedDate) {
+                                    // ($(this).val() !== '') ? $('#periode').prop('disabled', true) : $('#periode').prop('disabled', false);
+                                    const date = $(this).datepicker('getDate');
+                                    $("#tgl_akhir").datepicker("option", "minDate", date);
+                                    // Set datepicker end date to start date's month and next month
+                                    $("#tgl_akhir").datepicker("option", "defaultDate", date);
+                                    $("#tgl_akhir").datepicker("option", "maxDate", "+1M +1D");
+                                },
+                                onClose: function(selectedDate) {
+                                    if (selectedDate) {
+                                        $("#tgl_akhir").datepicker("option", "minDate", selectedDate);
+                                    } else {
+                                        $("#tgl_akhir").datepicker("option", "minDate", null);
+                                    }
+                                }
+                            });
+
+                            $("#tgl_akhir").datepicker({
+                                dateFormat: "yy-mm-dd",
+                                numberOfMonths: 2,
+                                beforeShowDay: available,
+                                onSelect: function(selectedDate) {
+                                    // ($(this).val() !== '') ? $('#periode').prop('disabled', true) : $('#periode').prop('disabled', false);
+                                    const date = $(this).datepicker('getDate');
+                                    $("#tgl_awal").datepicker("option", "maxDate", date);
+                                },
+                                onClose: function(selectedDate) {
+                                    if (selectedDate) {
+                                        $("#tgl_awal").datepicker("option", "maxDate", selectedDate);
+                                    } else {
+                                        $("#tgl_awal").datepicker("option", "maxDate", null);
+                                    }
+                                }
+                            });
+                            $('#tgl_awal, #tgl_akhir').prop('disabled', true);
+
+                            $('#custom_tgl').click(function() {
+                                let button = $(this)[0];
+                                if (button.innerHTML == 'Custom Tanggal') {
+                                    $('#tgl_awal, #tgl_akhir').prop('disabled', false);
+                                    $('#periode').prop('disabled', true);
+                                    button.innerHTML = 'Default';
+                                    button.classList.remove('btn-outline-secondary');
+                                    button.classList.add('btn-secondary');
+                                } else {
+                                    $('#tgl_awal, #tgl_akhir').prop('disabled', true);
+                                    $('#periode').prop('disabled', false);
+                                    button.innerHTML = 'Custom Tanggal';
+                                    button.classList.remove('btn-secondary');
+                                    button.classList.add('btn-outline-secondary');
+                                }
+                            })
+                        })
+                    </script>
      <!--         		<script>-->
 					<!--	$(document).ready(function() {-->
 					<!--		$("#peternakan").change(function() {-->

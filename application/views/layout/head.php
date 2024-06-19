@@ -11,6 +11,11 @@
         <link rel="icon" href="../favicon.ico" type="image/x-icon" />
 
         <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
+
+        <link
+            rel="stylesheet"
+            href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+        />
         
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/admin_page/plugins/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo base_url() ?>assets/admin_page/plugins/fontawesome-free/css/all.min.css">

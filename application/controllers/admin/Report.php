@@ -121,10 +121,13 @@ class Report extends CI_Controller
 // 			->where('DATE(tanggal_prod) <=',$filter['tgl_akhir'])
 // 			->get();
 
+			$id_peternakan = $get_peternakan->result()[0]->id_peternakan;
 			$produksi_layer 	= $this->report_model->list_produksi_layer($filter);
+			$tanggal_prod 	= $this->report_model->get_tanggal_for_fase_layer($id_peternakan);
 			$data = array(
 				'peternakan'	=> $get_peternakan->result(),
-				'produksi'		=> $produksi_layer,
+				'produksi'		=> $produksi_layer,	
+				'tanggal_prod'		=> $tanggal_prod,	
 				'isi'		=> 'admin/report/list_layer'
 			);
 			$this->load->view('layout/wrapper', $data, FALSE);

@@ -6,6 +6,7 @@
                 </footer> -->
             </div>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <script>window.jQuery || document.write('<script src="<?php echo base_url() ?>assets/admin_page/src/js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
         <script src="<?php echo base_url() ?>assets/admin_page/plugins/popper.js/dist/umd/popper.min.js"></script>
         <script src="<?php echo base_url() ?>assets/admin_page/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
