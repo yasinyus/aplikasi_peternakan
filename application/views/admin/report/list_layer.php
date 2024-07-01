@@ -94,11 +94,12 @@
                                         <option value="7" <?php if($this->input->get('periode') == 7){ echo "selected";} ?>>7 Hari Terakhir</option>
                                         <option value="14" <?php if($this->input->get('periode') == 14){ echo "selected";} ?>>14 Hari Terakhir</option>
                                         <option value="30" <?php if($this->input->get('periode') == 30){ echo "selected";} ?>>30 Hari Terakhir</option>
+                                        <option value="custom_date" <?php if($this->input->get('periode') == 'custom_date'){ echo "selected";} ?>>Custom Tanggal</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="form-group">
+                                <div id="tgl_awal_wrapper" class="form-group d-none">
                                     <label for="">Tgl Awal</label>
                                     <div id="rentang_waktu_awal"></div>
                                     <!-- <?php if($this->input->get('tgl_awal')){ ?>
@@ -110,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <div class="form-group">
+                                <div id="tgl_akhir_wrapper" class="form-group d-none">
                                     <label for="">Tgl Akhir</label>
                                     <div id="rentang_waktu_akhir"></div>
                                     <!-- <?php if($this->input->get('tgl_akhir')){ ?>
@@ -119,7 +120,7 @@
                                         <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir" >
                                     <?php  }?> -->
                                     <input type="text" id="tgl_akhir" class="form-control" placeholder="Pilih Tanggal" name="tgl_akhir" autocomplete="off"/>
-                                    <p id="custom_tgl" class="btn btn-outline-secondary btn-block mt-1">Custom Tanggal</p>
+                                    <p id="custom_tgl" class="btn btn-secondary btn-block mt-1">Default</p>
                                 </div>
                             </div>
                             
@@ -277,18 +278,15 @@
                     <script>
                         $(document).ready(function () {
                             const selectableDates = <?php echo json_encode($tanggal_prod); ?>;
-    
+                            const today = new Date();
+                            const yesterday = new Date(today);
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            const formatDate = (date) => $.datepicker.formatDate('yy-mm-dd', date);
+                            
                             function setPlaceholders() {
-                                const today = new Date();
-                                const yesterday = new Date(today);
-                                yesterday.setDate(yesterday.getDate() - 1);
-
-                                const formatDate = (date) => $.datepicker.formatDate('yy-mm-dd', date);
-
                                 $('#tgl_awal').attr('placeholder', formatDate(yesterday));
                                 $('#tgl_akhir').attr('placeholder', formatDate(today));
-                            }
-                            setPlaceholders();
+                            }                            
 
                             function available(date) {
                                 const dateString = $.datepicker.formatDate("yy-mm-dd", date);
@@ -333,24 +331,25 @@
                                     }
                                 }
                             });
-                            $('#tgl_awal, #tgl_akhir').prop('disabled', true);
-
+                            
                             $('#custom_tgl').click(function() {
                                 let button = $(this)[0];
-                                if (button.innerHTML == 'Custom Tanggal') {
-                                    $('#tgl_awal, #tgl_akhir').prop('disabled', false);
-                                    $('#periode').prop('disabled', true);
-                                    button.innerHTML = 'Default';
-                                    button.classList.remove('btn-outline-secondary');
-                                    button.classList.add('btn-secondary');
-                                } else {
-                                    $('#tgl_awal, #tgl_akhir').prop('disabled', true);
-                                    $('#periode').prop('disabled', false);
-                                    button.innerHTML = 'Custom Tanggal';
-                                    button.classList.remove('btn-secondary');
-                                    button.classList.add('btn-outline-secondary');
+                                $('#tgl_awal_wrapper, #tgl_akhir_wrapper').hide();
+                                $('#periode').prop('disabled', false);
+                                $('#periode option:selected').prop('selected', false);
+                            })
+                            
+                            $('#periode').on('change', function() {
+                                let element = $('#tgl_awal_wrapper, #tgl_akhir_wrapper');
+                                if ($(this).val() == 'custom_date') {
+                                    element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
+                                    $(this).prop('disabled', true);
+                                    $('#tgl_awal').attr('value', formatDate(yesterday));
+                                    $('#tgl_akhir').attr('value', formatDate(today));
                                 }
                             })
+
+                            setPlaceholders();
                         })
                     </script>
      <!--         		<script>-->

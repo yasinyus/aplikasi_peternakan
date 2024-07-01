@@ -31,10 +31,77 @@
                   document.getElementById("curve_chart_message").innerHTML += "Data belum memenuhi 30 hari terkahir, segera lengkapi agar dashboard dapat muncul";
               }
 
-              function drawChart() {
-                var data = google.visualization.arrayToDataTable([
+              // old draw() function
+              // function drawChart() {
+              //   var data = google.visualization.arrayToDataTable([
                   
-                  <?php
+              //     <?php
+              //     if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
+              //       $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
+              //       LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
+              //       WHERE jenis_produksi = 'layer' AND peternakan_id = '".$this->session->userdata('id_peternakan')."' AND user_id = '".$this->session->userdata('id')."' AND
+              //       tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
+              //       GROUP BY lokasi";
+              //     } else {
+              //     $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
+              //     LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
+              //     WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND
+              //     tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
+              //     GROUP BY lokasi";
+              //     }
+              //     $sql2 = "select distinct(tanggal_prod) as tanggal from produksi WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()";
+              //     $lokasi = $this->db->query($sql)->result_array();
+              //     $tgl = $this->db->query($sql2)->result_array();
+              //     $list = "['Tgl',";
+              //     foreach($lokasi as $row){
+              //       $list = $list."'".$row['nama_lokasi']."',";
+              //     }
+              //     $list = $list."]";
+              //     echo $list.",";
+              //     foreach($tgl as $tgls) {
+              //       $lst = "['".$tgls['tanggal']."',";
+              //       foreach($lokasi as $lok){
+              //         $sql3 = 'select peternakan_id, sum(total_kg_telur) as total_kg_telur from produksi where  tanggal_prod="'.$tgls['tanggal'].'" AND peternakan_id="'.$lok['lokasi'].'" AND jenis_produksi = "layer" AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY peternakan_id';
+              //         $prod = $this->db->query($sql3)->result_array();
+              //         foreach($prod as $baris){
+              //           // echo $baris['total_kg_telur'];
+              //           $lst = $lst.$baris['total_kg_telur'].",";
+              //         }
+                      
+              //       }
+              //       $lst = $lst."]";
+              //         echo $lst.",";
+              //     }
+
+              // ?>
+              //   ]);
+
+              //   var options = {
+              //     title: '',
+              //     curveType: 'function',
+              //     legend: { position: 'bottom' }
+              //   };
+
+              //   var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+              //   //attach the error handler here, before draw()
+              //   google.visualization.events.addListener(chart, 'error', errorHandler);    
+
+              //   chart.draw(data, options);
+              // }
+
+              function drawChart(selectedPeriod = 7) {
+                // Default to last 7 days
+                var dateToday = new Date();
+                var chartData = [];
+                for (var i = selectedPeriod - 1; i >= 0; i--) {
+                    var date = new Date();
+                    date.setDate(dateToday.getDate() - i);
+                    var dateString = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0');
+                    chartData.push([dateString, 0]); // Default value is null (for no data)
+                }
+
+                var phpData = [<?php
                   if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
                     $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
                     LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
@@ -51,12 +118,6 @@
                   $sql2 = "select distinct(tanggal_prod) as tanggal from produksi WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()";
                   $lokasi = $this->db->query($sql)->result_array();
                   $tgl = $this->db->query($sql2)->result_array();
-                  $list = "['Tgl',";
-                  foreach($lokasi as $row){
-                    $list = $list."'".$row['nama_lokasi']."',";
-                  }
-                  $list = $list."]";
-                  echo $list.",";
                   foreach($tgl as $tgls) {
                     $lst = "['".$tgls['tanggal']."',";
                     foreach($lokasi as $lok){
@@ -71,13 +132,32 @@
                     $lst = $lst."]";
                       echo $lst.",";
                   }
+                ?>];
 
-              ?>
-                ]);
+                var maxProdValue = 0;
+                for (var i = 0; i < chartData.length; i++) {
+                    for (var j = 0; j < phpData.length; j++) {
+                        if (chartData[i][0] === phpData[j][0]) {
+                          if (chartData[i][1] > maxProdValue) {
+                            maxProdValue = chartData[i][1];
+                          }
+                          chartData[i][1] = phpData[j][1] ? parseFloat(phpData[j][1]) : 0;
+                          break;
+                        }
+                    }
+                }
+                var data = google.visualization.arrayToDataTable([['Date', 'Value'], ...chartData]);
 
                 var options = {
                   title: '',
                   curveType: 'function',
+                  vAxis: {
+                    maxValue: (maxProdValue > 0) ? maxProdValue : 10, // Ensure the minimum value on the Y axis is 0
+                    minValue: 0, // Ensure the minimum value on the Y axis is 0
+                    viewWindow: {
+                        min: 0,
+                    }
+                  },
                   legend: { position: 'bottom' }
                 };
 
@@ -96,13 +176,18 @@
 
                         <div class="row">
 							              <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header"><h3>Produksi Telur (Kg) 30 hari terakhir</h3></div>
-                                    <p class="mt-2 ml-4">Tanggal Terakhir Update <?= date("d/m/Y", strtotime($last_update)); ?></p>
-                                    <div id="curve_chart_message" style="text-align: center;"></div>
-                                    <div class="card-body">
+                              <div class="card">
+                                <div class="card-header"><h3>Produksi Telur (Kg) 30 hari terakhir</h3></div>
+                                <p class="mt-2 ml-4">Tanggal Terakhir Update <?= date("d/m/Y", strtotime($last_update)); ?></p>
+                                <div id="curve_chart_message" style="text-align: center;"></div>
+                                <div class="card-body">
+                                      <select id="periodSelect">
+                                        <option value="7">7 hari</option>
+                                        <option value="14">14 hari</option>
+                                        <option value="30">30 hari</option>
+                                      </select>
                                     <div class="chart-container">
-                                      <div id="curve_chart" style="width: 900px; height: 500px"></div>
+                                      <div id="curve_chart" style="width: 1280px; height: 720px"></div>
                                     </div>
                                     </div>
 									
@@ -836,6 +921,9 @@
         options: options
       });
  
+      $('#periodSelect').on('change', function() {
+        drawChart(parseInt($(this).val()));
+      })
   });
 
   
