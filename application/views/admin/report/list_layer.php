@@ -1,3 +1,129 @@
+<style>
+    .-mt-6 {
+        margin-top: -1.5rem
+    }
+
+    /* Style utama untuk datepicker */
+    #ui-datepicker-div.ui-datepicker {
+        background: #fff !important; /* Warna latar belakang putih */
+        border: none !important; /* Hilangkan border */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Tambahkan bayangan */
+        padding: 10px 15px !important; /* Padding kalender */
+        border-radius: 10px !important; /* Sudut kalender yang halus */
+        width: auto !important; /* Lebar menyesuaikan konten */
+        margin: 0 auto !important; /* Margin untuk mengatur posisi di tengah */
+    }
+
+    /* Style header */
+    #ui-datepicker-div .ui-datepicker-header {
+        background: #fff !important; /* Header background putih */
+        border: none !important; /* Hilangkan border header */
+        color: #333 !important; /* Warna teks header */
+        font-size: 16px !important; /* Ukuran teks header */
+        font-weight: bold !important; /* Teks tebal */
+        padding: 10px 0 !important; /* Jarak vertikal header */
+        text-align: center !important; /* Posisi teks header di tengah */
+    }
+
+    /* Style untuk judul bulan dan tahun */
+    #ui-datepicker-div .ui-datepicker-title {
+        margin: 0 !important; /* Hilangkan margin */
+        display: inline-block !important; /* Menjaga elemen tetap inline */
+    }
+
+    /* Style untuk panah navigasi */
+    #ui-datepicker-div .ui-datepicker-prev, 
+    #ui-datepicker-div .ui-datepicker-next {
+        color: #333 !important; /* Warna panah */
+        font-size: 18px !important; /* Ukuran panah */
+        line-height: 1 !important; /* Line height */
+        position: absolute !important; /* Posisi absolut */
+        width: 20px !important; /* Lebar ikon panah */
+        height: 20px !important; /* Tinggi ikon panah */
+        cursor: pointer !important; /* Ubah cursor menjadi pointer */
+        margin-top: 13px;
+    }
+
+    #ui-datepicker-div .ui-datepicker-prev {
+        left: 10px !important; /* Posisi panah kiri */
+    }
+
+    #ui-datepicker-div .ui-datepicker-next {
+        right: 10px !important; /* Posisi panah kanan */
+    }
+
+    /* Style untuk kalender */
+    #ui-datepicker-div .ui-datepicker-calendar {
+        width: 100% !important; /* Kalender full width */
+        border: none !important;
+    }
+
+    /* Style untuk header hari (SU, MO, dll.) */
+    #ui-datepicker-div .ui-datepicker-calendar th {
+        color: #666 !important; /* Warna teks header hari */
+        font-weight: 500 !important; /* Tebal */
+        text-transform: uppercase !important; /* Ubah teks menjadi huruf besar */
+        padding: 10px 0 !important; /* Jarak vertikal */
+    }
+
+    /* Style untuk setiap tanggal */
+    #ui-datepicker-div .ui-datepicker-calendar td {
+        text-align: center !important; /* Teks di tengah */
+        border-radius: 50% !important; /* Tanggal berbentuk bulat */
+        transition: background 0.3s !important; /* Animasi saat hover */
+    }
+
+    /* Warna teks default tanggal */
+    #ui-datepicker-div .ui-datepicker-calendar .ui-state-default {
+        color: #333 !important; /* Warna teks */
+        font-weight: 500 !important; /* Tebal */
+        padding: 10px;
+        font-size: medium;
+        font-weight: 600;
+        border-radius: 20%;
+    }
+
+    /* Warna saat tanggal dihover */
+    #ui-datepicker-div .ui-datepicker-calendar .ui-state-hover {
+        background: #007bff !important; /* Warna latar belakang saat hover */
+        color: #fff !important; /* Warna teks saat hover */    
+    }
+
+    /* Warna untuk tanggal yang dipilih */
+    #ui-datepicker-div .ui-datepicker-calendar .ui-state-active {
+        background: #007bff !important; /* Warna latar belakang tanggal aktif */
+        color: #fff !important; /* Warna teks tanggal aktif */
+    }
+
+    /* Menghapus border di sekitar tanggal */
+    #ui-datepicker-div .ui-datepicker-calendar td {
+        border: none !important; /* Hilangkan border di dalam sel */
+        box-shadow: none !important; /* Hilangkan bayangan */
+    }
+
+    /* Menghapus border di sekitar hari (SU, MO, dll.) */
+    #ui-datepicker-div .ui-datepicker-calendar th {
+        border: none !important; /* Hilangkan border di header */
+    }
+
+    /* Menghapus border di sekitar bulan/tahun */
+    #ui-datepicker-div .ui-datepicker-header {
+        border: none !important; /* Hilangkan border di header */
+        box-shadow: none !important; /* Hilangkan bayangan di header */
+    }
+
+    /* Menghapus garis antar hari */
+    #ui-datepicker-div .ui-datepicker-calendar tr {
+        border: none !important; /* Hilangkan border pada baris */
+    }
+
+    /* Menghapus border untuk tanggal aktif atau hover */
+    #ui-datepicker-div .ui-datepicker-calendar .ui-state-default,
+    #ui-datepicker-div .ui-datepicker-calendar .ui-state-active,
+    #ui-datepicker-div .ui-datepicker-calendar .ui-state-hover {
+        border: none !important; /* Hilangkan border pada tanggal aktif/hover */
+    }
+</style>
 <div class="main-content">
                     <div class="container-fluid">
                         <div class="page-header">
@@ -120,11 +246,11 @@
                                         <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir" >
                                     <?php  }?> -->
                                     <input type="text" id="tgl_akhir" class="form-control" placeholder="Pilih Tanggal" name="tgl_akhir" autocomplete="off"/>
-                                    <p id="custom_tgl" class="btn btn-secondary btn-block mt-1">Default</p>
+                                    <p id="custom_tgl" class="btn btn-secondary btn-block mt-1">Reset</p>
                                 </div>
                             </div>
                             
-                            <div class="col-md-2">
+                            <div class="col-md-2 -mt-6">
                                 <div class="form-group">
                                     <label style="color:white">.</label>
                                     
@@ -142,12 +268,11 @@
                         <?php // } ?>
                         </form>
                         
-                        <a href="<?= base_url('admin/laporan_pdf/layer?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-danger" target="_blank">Download PDF</a>
-                                <a href="<?= base_url('admin/report/xls_layer?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-danger" target="_blank">Download XLS</a>
+
 
                         
-                        <div class="row mt-3">
-                            <div class="col-12">
+                        <div class="row">
+                            <div class="col-9">
                                 <?php if($_GET['pet'] == "0") { ?>
                                 
                                 <?php } else { ?>
@@ -156,11 +281,15 @@
                                 Lokasi : <?= $_GET['pet']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Flock : <?= $_GET['flo']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Kandang : <?= $_GET['kan']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                 Periode : <?= $_GET['periode'] ?? '' ?> Hari Terakhir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Periode : <?= $_GET['periode'] ?? '' ?> Hari Terakhir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Tgl Awal : <?= $_GET['tgl_awal'] ?? '' ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Tgl Akhir : <?= $_GET['tgl_akhir'] ?? '' ?> &nbsp;&nbsp;
-                                
+                      
                                 <?php } ?>
+                            </div>
+                            <div class="col-3 left-0">
+                                <a href="<?= base_url('admin/laporan_pdf/layer?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-danger" target="_blank">Download PDF</a>
+                                <a href="<?= base_url('admin/report/xls_layer?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-success" target="_blank">Download XLS</a> 
                             </div>
                         </div>
                         
@@ -176,19 +305,19 @@
 						                    <!--<table id="data_table" class="" width="100%">-->
                                             <thead>
                                             <tr>
-                                                <th>UB1</th>
-                                                <!-- <th></th> -->
-                                                <th></th>
+                                                <!-- <th>UB1</th> -->
+                                                <th rowspan="4">Tanggal</th>
+                                                <th colspan="2">Usia</th>
+                                                <th rowspan="4">Populasi</th>
                                                 <th colspan="2">Deplesi</th>
-                                                <th colspan="4">Konsumsi</th>
+                                                <th colspan="4">Konsumsi Pakan</th>
                                                 <th colspan="4">Produksi Telur</th>
                                                 <th colspan="6">Performa Produksi</th>
                                                 
                                             </tr>
-                                            <tr>
-                                                <th rowspan="3">Tanggal</th>
-                                                <!-- <th rowspan="3">Umur</th> -->
-                                                <th rowspan="3">Populasi</th>
+                                            <tr> 
+                                                <th rowspan="3">Minggu</th>
+                                                <th rowspan="3">Hari</th>
                                                 <th rowspan="3">Mati</th>
                                                 <th rowspan="3">Afkir</th>
                                                 <!--<th rowspan="3">Mort</th>-->
@@ -230,6 +359,8 @@
                                                     <td><?= $data['tanggal_prod'];?></td>
                                                     <!-- <td><?= floor($data['umur']);?></td> -->
                                                     <td><?= $data['jml_total_ayam'];?></td>
+                                                    <td><?= $data['jml_total_ayam'];?></td>
+                                                    <td><?= $data['jml_total_ayam'];?></td>
                                                     <td><?= $data['kematian'];?></td>
                                                     <td><?= $data['afkir'];?></td>
                                                     <!--<td><?= round($data['kematian']/$data['jml_total_ayam']*100/100, 4);?> %</td>-->
@@ -237,10 +368,10 @@
                                                     <td><?= $data['pakan_gr_per_ekor'] * 1000;?></td>
                                                     <td><?= $data['minum_liter'];?></td>
                                                     <td><?= $data['minum_ml_per_ekor'] * 1000;?></td>
-                                                    <td><?= $data['total_butir_telur'];?></td>
                                                     <td><?= $data['total_kg_telur'];?></td>
-                                                    <td><?= $data['bs_kg'];?></td>
+                                                    <td><?= $data['total_butir_telur'];?></td>
                                                     <td><?= $data['bs_butir'];?></td>
+                                                    <td><?= $data['bs_kg'];?></td>
                                                     <td><?= $data['bobot_telur_gr_perbutir'];?></td>
                                                     <td><?= $data['bobot_telur_per_seribu_ekor'];?></td>
                                                     <td><?= $data['hd'];?>%</td>
@@ -295,7 +426,6 @@
 
                             $("#tgl_awal").datepicker({
                                 dateFormat: "yy-mm-dd",
-                                numberOfMonths: 2,
                                 beforeShowDay: available,
                                 onSelect: function(selectedDate) {
                                     // ($(this).val() !== '') ? $('#periode').prop('disabled', true) : $('#periode').prop('disabled', false);
@@ -316,7 +446,6 @@
 
                             $("#tgl_akhir").datepicker({
                                 dateFormat: "yy-mm-dd",
-                                numberOfMonths: 2,
                                 beforeShowDay: available,
                                 onSelect: function(selectedDate) {
                                     // ($(this).val() !== '') ? $('#periode').prop('disabled', true) : $('#periode').prop('disabled', false);
@@ -341,11 +470,38 @@
                             
                             $('#periode').on('change', function() {
                                 let element = $('#tgl_awal_wrapper, #tgl_akhir_wrapper');
-                                if ($(this).val() == 'custom_date') {
+                                const selectedValue = $(this).val();
+                                if (selectedValue == 'custom_date') {
                                     element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
                                     $(this).prop('disabled', true);
+                                    $('#tgl_awal').attr('disabled', false);
+                                    $('#tgl_akhir').attr('disabled', false);
                                     $('#tgl_awal').attr('value', formatDate(yesterday));
                                     $('#tgl_akhir').attr('value', formatDate(today));
+                                } else if (selectedValue) {                                   
+                                    let startDate, endDate;
+
+                                    if (selectedValue == '7') {
+                                        startDate = new Date(today);
+                                        startDate.setDate(today.getDate() - 7); // 7 hari terakhir
+                                    } else if (selectedValue == '14') {
+                                        startDate = new Date(today);
+                                        startDate.setDate(today.getDate() - 14); // 14 hari terakhir
+                                    } else if (selectedValue == '30') {
+                                        startDate = new Date(today);
+                                        startDate.setDate(today.getDate() - 30); // 30 hari terakhir
+                                    }
+
+                                    // Format date to match datepicker format
+                                    const formattedStartDate = formatDate(startDate);
+                                    const formattedEndDate = formatDate(today);
+
+                                    // Set datepicker values and disable them
+                                    $('#tgl_awal').val(formattedStartDate).prop('readonly', true);
+                                    $('#tgl_akhir').val(formattedEndDate).prop('readonly', true);
+                                    element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
+                                } else {
+                                    element.hide();
                                 }
                             })
 
