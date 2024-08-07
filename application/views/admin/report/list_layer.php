@@ -233,7 +233,8 @@
                                     <?php } else {?>
                                         <input type="date" class="form-control" name="tgl_awal" id="tgl_awal" >
                                     <?php }?> -->
-                                    <input type="text" id="tgl_awal" class="form-control" placeholder="Pilih Tanggal" name="tgl_awal" autocomplete="off"/>
+                                    <input type="text" id="tgl_awal_field" class="form-control" placeholder="Pilih Tanggal" name="tgl_awal_field" autocomplete="off"/>
+                                    <input type="text" id="tgl_awal" name="tgl_awal" hidden/>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -245,7 +246,8 @@
                                     <?php } else {?>
                                         <input type="date" class="form-control" name="tgl_akhir" id="tgl_akhir" >
                                     <?php  }?> -->
-                                    <input type="text" id="tgl_akhir" class="form-control" placeholder="Pilih Tanggal" name="tgl_akhir" autocomplete="off"/>
+                                    <input type="text" id="tgl_akhir_field" class="form-control" placeholder="Pilih Tanggal" name="tgl_akhir_field" autocomplete="off"/>
+                                    <input type="text" id="tgl_akhir" name="tgl_akhir" hidden/>
                                     <p id="custom_tgl" class="btn btn-secondary btn-block mt-1">Reset</p>
                                 </div>
                             </div>
@@ -368,8 +370,8 @@
                                                     <td><?= $data['pakan_gr_per_ekor'] * 1000;?></td>
                                                     <td><?= $data['minum_liter'];?></td>
                                                     <td><?= $data['minum_ml_per_ekor'] * 1000;?></td>
-                                                    <td><?= $data['total_kg_telur'];?></td>
                                                     <td><?= $data['total_butir_telur'];?></td>
+                                                    <td><?= $data['total_kg_telur'];?></td>
                                                     <td><?= $data['bs_butir'];?></td>
                                                     <td><?= $data['bs_kg'];?></td>
                                                     <td><?= $data['bobot_telur_gr_perbutir'];?></td>
@@ -415,8 +417,8 @@
                             const formatDate = (date) => $.datepicker.formatDate('yy-mm-dd', date);
                             
                             function setPlaceholders() {
-                                $('#tgl_awal').attr('placeholder', formatDate(yesterday));
-                                $('#tgl_akhir').attr('placeholder', formatDate(today));
+                                $('#tgl_awal_field').attr('placeholder', formatDate(yesterday));
+                                $('#tgl_akhir_field').attr('placeholder', formatDate(today));
                             }                            
 
                             function available(date) {
@@ -424,39 +426,41 @@
                                 return [selectableDates.indexOf(dateString) !== -1, ""];
                             }
 
-                            $("#tgl_awal").datepicker({
+                            $("#tgl_awal_field").datepicker({
                                 dateFormat: "yy-mm-dd",
                                 beforeShowDay: available,
                                 onSelect: function(selectedDate) {
                                     // ($(this).val() !== '') ? $('#periode').prop('disabled', true) : $('#periode').prop('disabled', false);
                                     const date = $(this).datepicker('getDate');
-                                    $("#tgl_akhir").datepicker("option", "minDate", date);
+                                    $("#tgl_akhir_field").datepicker("option", "minDate", date);
                                     // Set datepicker end date to start date's month and next month
-                                    $("#tgl_akhir").datepicker("option", "defaultDate", date);
-                                    $("#tgl_akhir").datepicker("option", "maxDate", "+1M +1D");
+                                    $("#tgl_akhir_field").datepicker("option", "defaultDate", date);
+                                    $("#tgl_akhir_field").datepicker("option", "maxDate", "+1M +1D");
+                                    $('#tgl_awal').val(selectedDate);
                                 },
                                 onClose: function(selectedDate) {
                                     if (selectedDate) {
-                                        $("#tgl_akhir").datepicker("option", "minDate", selectedDate);
+                                        $("#tgl_akhir_field").datepicker("option", "minDate", selectedDate);
                                     } else {
-                                        $("#tgl_akhir").datepicker("option", "minDate", null);
+                                        $("#tgl_akhir_field").datepicker("option", "minDate", null);
                                     }
                                 }
                             });
 
-                            $("#tgl_akhir").datepicker({
+                            $("#tgl_akhir_field").datepicker({
                                 dateFormat: "yy-mm-dd",
                                 beforeShowDay: available,
                                 onSelect: function(selectedDate) {
                                     // ($(this).val() !== '') ? $('#periode').prop('disabled', true) : $('#periode').prop('disabled', false);
                                     const date = $(this).datepicker('getDate');
-                                    $("#tgl_awal").datepicker("option", "maxDate", date);
+                                    $("#tgl_awal_field").datepicker("option", "maxDate", date);
+                                    $('#tgl_akhir').val(selectedDate);
                                 },
                                 onClose: function(selectedDate) {
                                     if (selectedDate) {
-                                        $("#tgl_awal").datepicker("option", "maxDate", selectedDate);
+                                        $("#tgl_awal_field").datepicker("option", "maxDate", selectedDate);
                                     } else {
-                                        $("#tgl_awal").datepicker("option", "maxDate", null);
+                                        $("#tgl_awal_field").datepicker("option", "maxDate", null);
                                     }
                                 }
                             });
@@ -474,10 +478,10 @@
                                 if (selectedValue == 'custom_date') {
                                     element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
                                     $(this).prop('disabled', true);
-                                    $('#tgl_awal').attr('disabled', false);
-                                    $('#tgl_akhir').attr('disabled', false);
-                                    $('#tgl_awal').attr('value', formatDate(yesterday));
-                                    $('#tgl_akhir').attr('value', formatDate(today));
+                                    $('#tgl_awal_field').attr('disabled', false);
+                                    $('#tgl_akhir_field').attr('disabled', false);
+                                    $('#tgl_awal_field').attr('value', formatDate(yesterday));
+                                    $('#tgl_akhir_field').attr('value', formatDate(today));
                                 } else if (selectedValue) {                                   
                                     let startDate, endDate;
 
@@ -497,8 +501,10 @@
                                     const formattedEndDate = formatDate(today);
 
                                     // Set datepicker values and disable them
-                                    $('#tgl_awal').val(formattedStartDate).prop('readonly', true);
-                                    $('#tgl_akhir').val(formattedEndDate).prop('readonly', true);
+                                    $('#tgl_awal').val(formattedStartDate);
+                                    $('#tgl_akhir').val(formattedEndDate);
+                                    $('#tgl_awal_field').val(formattedStartDate).prop('disabled', true);
+                                    $('#tgl_akhir_field').val(formattedEndDate).prop('disabled', true);
                                     element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
                                 } else {
                                     element.hide();
