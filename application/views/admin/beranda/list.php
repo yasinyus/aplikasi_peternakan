@@ -103,17 +103,17 @@
 
                 var phpData = [<?php
                   if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
-                    $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
-                    LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
-                    WHERE jenis_produksi = 'layer' AND peternakan_id = '".$this->session->userdata('id_peternakan')."' AND user_id = '".$this->session->userdata('id')."' AND
+                    $sql = "select pro.flock_id as flock_id from produksi pro
+                    LEFT JOIN flock f ON f.user_id = pro.user_id
+                    WHERE jenis_produksi = 'layer' AND pro.user_id = '".$this->session->userdata('id')."' AND
                     tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
-                    GROUP BY lokasi";
+                    GROUP BY pro.flock_id";
                   } else {
-                  $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
-                  LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
-                  WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND
+                  $sql = "select pro.flock_id as flock_id from produksi pro
+                  LEFT JOIN flock f ON f.user_id = pro.user_id
+                  WHERE jenis_produksi = 'layer' AND pro.user_id = '".$this->session->userdata('id')."' AND
                   tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
-                  GROUP BY lokasi";
+                  GROUP BY pro.flock_id";
                   }
                   $sql2 = "select distinct(tanggal_prod) as tanggal from produksi WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()";
                   $lokasi = $this->db->query($sql)->result_array();
@@ -121,7 +121,7 @@
                   foreach($tgl as $tgls) {
                     $lst = "['".$tgls['tanggal']."',";
                     foreach($lokasi as $lok){
-                      $sql3 = 'select peternakan_id, sum(total_kg_telur) as total_kg_telur from produksi where  tanggal_prod="'.$tgls['tanggal'].'" AND peternakan_id="'.$lok['lokasi'].'" AND jenis_produksi = "layer" AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY peternakan_id';
+                      $sql3 = 'select flock_id, sum(total_kg_telur) as total_kg_telur from produksi where  tanggal_prod="'.$tgls['tanggal'].'" AND flock_id="'.$lok['flock_id'].'" AND jenis_produksi = "layer" AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY flock_id';
                       $prod = $this->db->query($sql3)->result_array();
                       foreach($prod as $baris){
                         // echo $baris['total_kg_telur'];
@@ -134,25 +134,75 @@
                   }
                 ?>];
 
-                var maxProdValue = 0;
+                // var phpData = [<?php
+                //   if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
+                //     $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
+                //     LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
+                //     WHERE jenis_produksi = 'layer' AND peternakan_id = '".$this->session->userdata('id_peternakan')."' AND user_id = '".$this->session->userdata('id')."' AND
+                //     tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
+                //     GROUP BY lokasi";
+                //   } else {
+                //   $sql = "select pet.kel AS nama_lokasi, pro.peternakan_id as lokasi from produksi pro
+                //   LEFT JOIN peternakan pet ON pet.id_peternakan = pro.peternakan_id
+                //   WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND
+                //   tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
+                //   GROUP BY lokasi";
+                //   }
+                //   $sql2 = "select distinct(tanggal_prod) as tanggal from produksi WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()";
+                //   $lokasi = $this->db->query($sql)->result_array();
+                //   $tgl = $this->db->query($sql2)->result_array();
+                //   foreach($tgl as $tgls) {
+                //     $lst = "['".$tgls['tanggal']."',";
+                //     foreach($lokasi as $lok){
+                //       $sql3 = 'select peternakan_id, sum(total_kg_telur) as total_kg_telur from produksi where  tanggal_prod="'.$tgls['tanggal'].'" AND peternakan_id="'.$lok['lokasi'].'" AND jenis_produksi = "layer" AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY peternakan_id';
+                //       $prod = $this->db->query($sql3)->result_array();
+                //       foreach($prod as $baris){
+                //         // echo $baris['total_kg_telur'];
+                //         $lst = $lst.$baris['total_kg_telur'].",";
+                //       }
+                      
+                //     }
+                //     $lst = $lst."]";
+                //       echo $lst.",";
+                //   }
+                // ?>];                
+
+                // Cari jumlah kolom maksimal berdasarkan data phpData
+                var maxColumns = phpData.reduce((max, item) => Math.max(max, item.length), 0);
+
+                // Tambahkan kolom tambahan ke chartData sesuai dengan jumlah kolom maksimal
                 for (var i = 0; i < chartData.length; i++) {
-                    for (var j = 0; j < phpData.length; j++) {
-                        if (chartData[i][0] === phpData[j][0]) {
-                          if (chartData[i][1] > maxProdValue) {
-                            maxProdValue = chartData[i][1];
-                          }
-                          chartData[i][1] = phpData[j][1] ? parseFloat(phpData[j][1]) : 0;
-                          break;
-                        }
-                    }
+                  while (chartData[i].length < maxColumns) {
+                    chartData[i].push(0); // Isi dengan null jika belum ada nilai
+                  }
                 }
-                var data = google.visualization.arrayToDataTable([['Date', 'Value'], ...chartData]);
+
+                // Loop untuk memasukkan data dari phpData ke dalam chartData
+                for (var i = 0; i < chartData.length; i++) {
+                  for (var j = 0; j < phpData.length; j++) {
+                    if (chartData[i][0] === phpData[j][0]) {
+                      for (var k = 1; k < phpData[j].length; k++) {
+                        chartData[i][k] = phpData[j][k] ? parseFloat(phpData[j][k]) : 0;
+                      }
+                      break;
+                    }
+                  }
+                }
+
+                // Sesuaikan header data dengan jumlah garis
+                var dataHeader = ['Date'];
+                for (var i = 1; i < maxColumns; i++) {
+                  dataHeader.push('Value ' + i);
+                }
+
+                var data = google.visualization.arrayToDataTable([dataHeader, ...chartData]);
+                
 
                 var options = {
                   title: '',
                   curveType: 'function',
                   vAxis: {
-                    maxValue: (maxProdValue > 0) ? maxProdValue : 10, // Ensure the minimum value on the Y axis is 0
+                    maxValue: (maxColumns > 0) ? maxColumns : 10, // Ensure the minimum value on the Y axis is 0
                     minValue: 0, // Ensure the minimum value on the Y axis is 0
                     viewWindow: {
                         min: 0,

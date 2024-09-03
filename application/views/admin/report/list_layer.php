@@ -256,7 +256,7 @@
                                 <div class="form-group">
                                     <label style="color:white">.</label>
                                     
-                                    <button type="submit" class="form-control btn btn-success mr-2" style="color:black; border:3px solid #000"><i class="fa fa-filter"></i> Filter</button>
+                                    <button type="submit" class="filter-button form-control btn btn-success mr-2 d-none" style="color:black; border:3px solid #000"><i class="fa fa-filter"></i> Filter</button>
                                     
                                 </div>
                             </div>
@@ -470,6 +470,7 @@
                                 $('#tgl_awal_wrapper, #tgl_akhir_wrapper').hide();
                                 $('#periode').prop('disabled', false);
                                 $('#periode option:selected').prop('selected', false);
+                                $('.filter-button').hide();
                             })
                             
                             $('#periode').on('change', function() {
@@ -506,7 +507,10 @@
                                     $('#tgl_awal_field').val(formattedStartDate).prop('disabled', true);
                                     $('#tgl_akhir_field').val(formattedEndDate).prop('disabled', true);
                                     element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
+
+                                    $('.filter-button').hasClass('d-none') ? $('.filter-button').removeClass('d-none') : $('.filter-button').show();
                                 } else {
+                                    $('.filter-button').hide();
                                     element.hide();
                                 }
                             })
