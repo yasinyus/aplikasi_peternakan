@@ -114,24 +114,34 @@ class Dashboard extends CI_Controller
 	//   print_r($line_charts);
 	//   die();
 	$produksi_telurkg 	= $this->dashboard_model->list_produksi_telurkg();
-	$produksi_today 	= $this->dashboard_model->list_petenakan_today();
-	$produksi_yesterday 	= $this->dashboard_model->list_petenakan_yesterday();
+	// $produksi_today 	= $this->dashboard_model->list_petenakan_today();
+	// $produksi_yesterday 	= $this->dashboard_model->list_petenakan_yesterday();
 	$produksi_mingguan1 	= $this->dashboard_model->list_petenakan_mingguan1();
 	$produksi_mingguan2 	= $this->dashboard_model->list_petenakan_mingguan2();
+	$produksi_mingguan_grower1 	= $this->dashboard_model->list_petenakan_mingguan_grower1();
+	$produksi_mingguan_grower2 	= $this->dashboard_model->list_petenakan_mingguan_grower2();
 	$produksi_bulanan1 	= $this->dashboard_model->list_petenakan_bulanan1();
 	$produksi_bulanan2 	= $this->dashboard_model->list_petenakan_bulanan2();
+	$produksi_bulanan_grower1 	= $this->dashboard_model->list_petenakan_bulanan_grower1();
+	$produksi_bulanan_grower2 	= $this->dashboard_model->list_petenakan_bulanan_grower2();
 	$last_update 	    = $this->dashboard_model->last_update();
+	$last_update_grower 	    = $this->dashboard_model->last_update_grower();
 		
 
 		$data = array(
 			'last_update'		    => $last_update,
+			'last_update_grower'		    => $last_update_grower,
 			'produksi_telurkg'		=> $produksi_telurkg,
-			'produksi_today'		=> $produksi_today,
-			'produksi_yesterday'	=> $produksi_yesterday,
+			// 'produksi_today'		=> $produksi_today,
+			// 'produksi_yesterday'	=> $produksi_yesterday,
 			'produksi_mingguan1'	=> $produksi_mingguan1,
 			'produksi_mingguan2'	=> $produksi_mingguan2,
 			'produksi_bulanan1'		=> $produksi_bulanan1,
 			'produksi_bulanan2'		=> $produksi_bulanan2,
+			'produksi_mingguan_grower1'	=> $produksi_mingguan_grower1,
+			'produksi_mingguan_grower2'	=> $produksi_mingguan_grower2,
+			'produksi_bulanan_grower1'		=> $produksi_bulanan_grower1,
+			'produksi_bulanan_grower2'		=> $produksi_bulanan_grower2,
 			'chart_data'			=> $charts,
 			'bar_chart'				=> $bar_charts,
 			'line_chart'			=> $line_charts,

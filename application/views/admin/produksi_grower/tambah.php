@@ -145,6 +145,24 @@
                                                     <textarea name="perlakuan" class="form-control"></textarea>
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-3 col-form-label">Nama Obat (Opsional)</label>
+												<div class="col-sm-9">
+                                                    <textarea name="nama_obat" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-3 col-form-label">Nama Pakan (Opsional)</label>
+												<div class="col-sm-9">
+                                                    <textarea name="nama_pakan" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-3 col-form-label">Vitamin (Opsional)</label>
+												<div class="col-sm-9">
+                                                    <textarea name="vitamin" class="form-control"></textarea>
+                                                </div>
+                                            </div>
 
 											
 											<div class="form-group row">

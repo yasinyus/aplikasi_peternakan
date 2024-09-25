@@ -227,7 +227,7 @@
                         <div class="row">
 							              <div class="col-md-12">
                               <div class="card">
-                                <div class="card-header"><h3>Produksi Telur (Kg) 30 hari terakhir</h3></div>
+                                <div class="card-header"><h3>Produksi Telur (Kg)</h3></div>
                                 <p class="mt-2 ml-4">Tanggal Terakhir Update <?= date("d/m/Y", strtotime($last_update)); ?></p>
                                 <div id="curve_chart_message" style="text-align: center;"></div>
                                 <div class="card-body">
@@ -285,25 +285,18 @@
                                     </div>
                                     <div class="col-md-2">
                                     <select id="test" class="form-control" onchange="showDiv(this)">
-                                      <option value="0">Harian</option>
                                       <option value="1">7 Hari</option>
                                       <option value="2">30 Hari</option>
                                     </select>
                                     <script type="text/javascript">
                                       function showDiv(select){
                                         if(select.value==1){
-                                          document.getElementById('harian').style.display = "none";
                                           document.getElementById('mingguan').style.display = "block";
                                           document.getElementById('bulanan').style.display = "none";
-                                        } else if(select.value==2){
-                                          document.getElementById('harian').style.display = "none";
+                                        } else {
                                           document.getElementById('mingguan').style.display = "none";
                                           document.getElementById('bulanan').style.display = "block";
-                                        } else {
-                                          document.getElementById('harian').style.display = "block";
-                                          document.getElementById('mingguan').style.display = "none";
-                                          document.getElementById('bulanan').style.display = "none";
-                                        }
+                                        } 
                                       } 
                                       </script>
                                     </div>
@@ -322,7 +315,7 @@
                                         }
                                         </style>
 
-                                        <div id="harian"><div class="row">
+                                        <!-- <div id="harian"><div class="row">
                           
                           <div class="col-md-3">
                           <h5 class="text-center">Lokasi</h5>
@@ -457,8 +450,8 @@
                             </div>
                           </div>
                         </div>
-                      </div>
-                                        <div id="mingguan" style="display:none;">
+                      </div> -->
+                                        <div id="mingguan">
                                         <div class="row">
                           
                           <div class="col-md-3">
@@ -743,6 +736,332 @@
                             </div>
                         </div>
 
+                        <div class="col-md-12" style="font-size: 11px;">
+                                <div class="card">
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                      <div class="card-header"><h3>Produksi Grower</h3></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <p class="mt-2 ml-4">Tanggal Hari ini <?= date('m/d/Y') ?></p> <br>
+                                      <p class="mt-2 ml-4">Tanggal Terakhir Update <?= date("d/m/Y", strtotime($last_update_grower)); ?></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                    <select id="test" class="form-control" onchange="showDivGrower(this)">
+                                      <option value="1">7 Hari</option>
+                                      <option value="2">30 Hari</option>
+                                    </select>
+                                    <script type="text/javascript">
+                                      function showDivGrower(select){
+                                        if(select.value==1){
+                                          document.getElementById('mingguan-grower').style.display = "block";
+                                          document.getElementById('bulanan-grower').style.display = "none";
+                                        } else {
+                                          document.getElementById('mingguan-grower').style.display = "none";
+                                          document.getElementById('bulanan-grower').style.display = "block";
+                                        } 
+                                      } 
+                                      </script>
+                                    </div>
+                                  </div>
+									
+                                    <div class="card-body">
+                                      
+                                      <style>
+                                        .table-1, tr, th, td {
+                                          border: 1px solid silver;
+                                          border-collapse: collapse;
+                                          text-align: center;
+                                        }
+                                        .noBorder {
+                                          border:none !important;
+                                        }
+                                        </style>
+                                        <div id="mingguan-grower">
+                                        <div class="row">
+                          
+                          <div class="col-md-3">
+                          <h5 class="text-center">Lokasi</h5>
+                                        <table id="" class="" width="100%">
+                                            <thead>
+                                              <tr class="noBorder">
+                                                  <th rowspan="2" colspan="2" style="background-color:silver">Nama Lokasi</th>
+                                              </tr>
+                                              
+                                            </thead>
+                                            <tbody>
+                                                <?php  foreach($produksi_mingguan_grower1 as $data) { ?>
+                                                <tr>
+                                                    <td><?= $data->kel;?>, <?= $data->prov; ?></td>
+                                                    </tr>
+                                                 <?php   }  ?> 
+                                            </tbody>
+                                        </table>
+                                      </div>
+                                      <div class="col-md-3">
+                          <h5 class="text-center">Telur Butir</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Periode saat ini</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_butir_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">sebelumnya</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower2 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_butir_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                                      <div class="col-md-3">
+                          <h5 class="text-center">Telur Kg</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Periode saat ini</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_kg_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">sebelumnya</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower2 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_kg_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                          <h5 class="text-center">Kematian</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Periode saat ini</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->kematian;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">sebelumnya</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower2 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->kematian;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                                      </div>
+
+                                        <div id="bulanan-grower" style="display:none;">
+                                        <div class="row">
+                          
+                          <div class="col-md-3">
+                          <h5 class="text-center">Lokasi</h5>
+                                        <table id="" class="" width="100%">
+                                            <thead>
+                                              <tr class="noBorder">
+                                                  <th rowspan="2" colspan="2" style="background-color:silver">Nama Lokasi</th>
+                                              </tr>
+                                              
+                                            </thead>
+                                            <tbody>
+                                                <?php  foreach($produksi_bulanan_grower1 as $data) { ?>
+                                                <tr>
+                                                    <td><?= $data->kel;?>, <?= $data->prov; ?></td>
+                                                    </tr>
+                                                 <?php   }  ?> 
+                                            </tbody>
+                                        </table>
+                                      </div>
+                                      <div class="col-md-3">
+                          <h5 class="text-center">Telur Butir</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Periode saat ini</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_butir_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">sebelumnya</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower2 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_butir_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                                      <div class="col-md-3">
+                          <h5 class="text-center">Telur Kg</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Periode saat ini</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_kg_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">sebelumnya</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower2 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->total_kg_telur;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                          <h5 class="text-center">Kematian</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Periode saat ini</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->kematian;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                              <div class="col-md-6">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">sebelumnya</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower2 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->kematian;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                                      </div>
+                        
+
+                        
+                        
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         
 
                         <!-- javascript -->
@@ -973,7 +1292,7 @@
  
       $('#periodSelect').on('change', function() {
         drawChart(parseInt($(this).val()));
-      })
+      });
   });
 
   

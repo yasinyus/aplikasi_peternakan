@@ -283,7 +283,7 @@
                                 Lokasi : <?= $_GET['pet']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Flock : <?= $_GET['flo']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Kandang : <?= $_GET['kan']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                Periode : <?= $_GET['periode'] ?? '' ?> Hari Terakhir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Periode : <?= isset($_GET['periode']) ? $_GET['periode'] . ' Hari Terakhir' : 'Custom' ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Tgl Awal : <?= $_GET['tgl_awal'] ?? '' ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Tgl Akhir : <?= $_GET['tgl_akhir'] ?? '' ?> &nbsp;&nbsp;
                       
@@ -477,6 +477,7 @@
                                 let element = $('#tgl_awal_wrapper, #tgl_akhir_wrapper');
                                 const selectedValue = $(this).val();
                                 if (selectedValue == 'custom_date') {
+                                    $('.filter-button').hasClass('d-none') ? $('.filter-button').removeClass('d-none') : $('.filter-button').show();
                                     element.hasClass('d-none') ? element.removeClass('d-none') : element.show();
                                     $(this).prop('disabled', true);
                                     $('#tgl_awal_field').attr('disabled', false);
