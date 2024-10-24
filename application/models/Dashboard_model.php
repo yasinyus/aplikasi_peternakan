@@ -92,6 +92,11 @@ class Dashboard_model extends CI_Model {
 	public function list_petenakan_mingguan_grower1 (){
 		$this->db->select('kel');
 		$this->db->select('prov');
+		$this->db->select('jml_total_ayam');
+		$this->db->select('umur');
+		$this->db->select('pakan_gr_per_ekor');
+		$this->db->select('bobot_telur_gr_perbutir');
+		$this->db->select('uniformity');
 		$this->db->select_sum('total_butir_telur');
 		$this->db->select_sum('total_kg_telur');
 		$this->db->select_sum('kematian');
@@ -187,6 +192,11 @@ class Dashboard_model extends CI_Model {
 		
 		$this->db->select('kel');
 		$this->db->select('prov');
+		$this->db->select('jml_total_ayam');
+		$this->db->select('umur');
+		$this->db->select('pakan_gr_per_ekor');
+		$this->db->select('bobot_telur_gr_perbutir');
+		$this->db->select('uniformity');
 		$this->db->select_sum('total_butir_telur');
 		$this->db->select_sum('total_kg_telur');
 		$this->db->select_sum('kematian');

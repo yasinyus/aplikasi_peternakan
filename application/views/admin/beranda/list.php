@@ -31,6 +31,19 @@
                   document.getElementById("curve_chart_message").innerHTML += "Data belum memenuhi 30 hari terkahir, segera lengkapi agar dashboard dapat muncul";
               }
 
+              function generateColors(numCategories) {
+                let colors = [];
+                let baseColor = [30, 255, 255]; // RGB untuk biru (#1E90FF)
+                let step = 50; // Selisih gradasi warna
+
+                for (let i = 0; i < numCategories; i++) {
+                  // Mengurangi intensitas biru secara bertahap
+                  let newColor = `rgb(${baseColor[0]}, ${baseColor[1] - (i * step)}, ${baseColor[2]})`;
+                  colors.push(newColor);
+                }
+                return colors;
+              }
+
               // old draw() function
               // function drawChart() {
               //   var data = google.visualization.arrayToDataTable([
@@ -101,37 +114,115 @@
                     chartData.push([dateString, 0]); // Default value is null (for no data)
                 }
 
+                // var phpData = [<?php
+                //   if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
+                //     $sql = "select pro.flock_id as flock_id from produksi pro
+                //     LEFT JOIN flock f ON f.user_id = pro.user_id
+                //     WHERE jenis_produksi = 'layer' AND pro.user_id = '".$this->session->userdata('id')."' AND
+                //     tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
+                //     GROUP BY pro.flock_id";
+                //   } else {
+                //   $sql = "select pro.flock_id as flock_id from produksi pro
+                //   LEFT JOIN flock f ON f.user_id = pro.user_id
+                //   WHERE jenis_produksi = 'layer' AND pro.user_id = '".$this->session->userdata('id')."' AND
+                //   tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
+                //   GROUP BY pro.flock_id";
+                //   }
+                //   $sql2 = "select distinct(tanggal_prod) as tanggal from produksi WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()";
+                //   $lokasi = $this->db->query($sql)->result_array();
+                //   $tgl = $this->db->query($sql2)->result_array();
+                //   foreach($tgl as $tgls) {
+                //     $lst = "['".$tgls['tanggal']."',";
+                //     foreach($lokasi as $lok){
+                //       $sql3 = 'select flock_id, sum(total_kg_telur) as total_kg_telur from produksi where  tanggal_prod="'.$tgls['tanggal'].'" AND flock_id="'.$lok['flock_id'].'" AND jenis_produksi = "layer" AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY flock_id';
+                //       $prod = $this->db->query($sql3)->result_array();
+                //       foreach($prod as $baris){
+                //         // echo $baris['total_kg_telur'];
+                //         $lst = $lst.$baris['total_kg_telur'].",";
+                //       }
+                      
+                //     }
+                //     $lst = $lst."]";
+                //       echo $lst.",";
+                //   }
+                // ?>];
+
                 var phpData = [<?php
                   if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
-                    $sql = "select pro.flock_id as flock_id from produksi pro
-                    LEFT JOIN flock f ON f.user_id = pro.user_id
-                    WHERE jenis_produksi = 'layer' AND pro.user_id = '".$this->session->userdata('id')."' AND
-                    tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
-                    GROUP BY pro.flock_id";
+                    $sql = "SELECT tanggal_prod, SUM(total_kg_telur) AS total_kg_telur, flock_id 
+                            FROM produksi 
+                            WHERE jenis_produksi = 'layer' 
+                            AND user_id = ".$this->session->userdata('id')."
+                            AND tanggal_prod IN ( 
+                                SELECT DISTINCT(tanggal_prod) AS tanggal_prod 
+                                FROM produksi 
+                                WHERE tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() 
+                            )
+                            GROUP BY flock_id, tanggal_prod
+                            ORDER BY flock_id;
+                            ";
                   } else {
-                  $sql = "select pro.flock_id as flock_id from produksi pro
-                  LEFT JOIN flock f ON f.user_id = pro.user_id
-                  WHERE jenis_produksi = 'layer' AND pro.user_id = '".$this->session->userdata('id')."' AND
-                  tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()
-                  GROUP BY pro.flock_id";
+                  $sql = "SELECT tanggal_prod, SUM(total_kg_telur) AS total_kg_telur, flock_id 
+                            FROM produksi 
+                            WHERE jenis_produksi = 'layer' 
+                            AND user_id = ".$this->session->userdata('id')."
+                            AND tanggal_prod IN ( 
+                                SELECT DISTINCT(tanggal_prod) AS tanggal_prod 
+                                FROM produksi 
+                                WHERE tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() 
+                            )
+                            GROUP BY flock_id, tanggal_prod
+                            ORDER BY flock_id;";
                   }
-                  $sql2 = "select distinct(tanggal_prod) as tanggal from produksi WHERE jenis_produksi = 'layer' AND user_id = '".$this->session->userdata('id')."' AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()";
-                  $lokasi = $this->db->query($sql)->result_array();
-                  $tgl = $this->db->query($sql2)->result_array();
-                  foreach($tgl as $tgls) {
-                    $lst = "['".$tgls['tanggal']."',";
-                    foreach($lokasi as $lok){
-                      $sql3 = 'select flock_id, sum(total_kg_telur) as total_kg_telur from produksi where  tanggal_prod="'.$tgls['tanggal'].'" AND flock_id="'.$lok['flock_id'].'" AND jenis_produksi = "layer" AND tanggal_prod BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY flock_id';
-                      $prod = $this->db->query($sql3)->result_array();
-                      foreach($prod as $baris){
-                        // echo $baris['total_kg_telur'];
-                        $lst = $lst.$baris['total_kg_telur'].",";
+                  $result = $this->db->query($sql)->result_array();
+                  
+                  // Ambil ID unik dan buat mapping index
+                  $unique_ids = [];
+                  foreach ($result as $item) {
+                      if (!in_array($item['flock_id'], $unique_ids)) {
+                          $unique_ids[] = $item['flock_id'];
                       }
-                      
-                    }
-                    $lst = $lst."]";
-                      echo $lst.",";
                   }
+
+                  // Buat mapping untuk index
+                  $ids = [];
+                  foreach ($unique_ids as $index => $id) {
+                      $ids[] = ['id' => $id, 'index' => $index + 1]; // Index dimulai dari 1
+                  }
+
+                  // Buat array untuk menyimpan hasil
+                  $data = [];
+                  $id_index_mapping = [];
+
+                  // Inisialisasi array untuk menyimpan data
+                  foreach ($ids as $id_data) {
+                      $id_index_mapping[$id_data['id']] = $id_data['index'];
+                  }
+
+                  // Iterasi melalui $result
+                  foreach ($result as $item) {
+                      $tanggal = $item['tanggal_prod'];
+                      $total_kg = (float)$item['total_kg_telur'];
+                      $id = $item['flock_id'];
+
+                      // Jika tanggal belum ada di $data, buat entry baru
+                      if (!isset($data[$tanggal])) {
+                          // Inisialisasi dengan tanggal dan nilai 0 untuk index yang ada
+                          $data[$tanggal] = array_merge([$tanggal], array_fill(0, count($unique_ids), 0));
+                      }
+
+                      // Set nilai total_kg sesuai dengan index yang ditentukan
+                      $index = $id_index_mapping[$id] ?? null; // Dapatkan index dari mapping
+                      if ($index !== null) {
+                          $data[$tanggal][$index] = $total_kg; // Set nilai
+                      }
+                  }
+
+                  // Mengubah associative array menjadi indexed array
+                  $data = array_values($data);
+
+                  echo json_encode($data);
+
                 ?>];
 
                 // var phpData = [<?php
@@ -168,7 +259,7 @@
                 // ?>];                
 
                 // Cari jumlah kolom maksimal berdasarkan data phpData
-                var maxColumns = phpData.reduce((max, item) => Math.max(max, item.length), 0);
+                var maxColumns = phpData[0].reduce((max, item) => Math.max(max, item.length), 0);
 
                 // Tambahkan kolom tambahan ke chartData sesuai dengan jumlah kolom maksimal
                 for (var i = 0; i < chartData.length; i++) {
@@ -179,10 +270,10 @@
 
                 // Loop untuk memasukkan data dari phpData ke dalam chartData
                 for (var i = 0; i < chartData.length; i++) {
-                  for (var j = 0; j < phpData.length; j++) {
-                    if (chartData[i][0] === phpData[j][0]) {
-                      for (var k = 1; k < phpData[j].length; k++) {
-                        chartData[i][k] = phpData[j][k] ? parseFloat(phpData[j][k]) : 0;
+                  for (var j = 0; j < phpData[0].length; j++) {
+                    if (chartData[i][0] === phpData[0][j][0]) {
+                      for (var k = 1; k < phpData[0][j].length; k++) {
+                        chartData[i][k] = phpData[0][j][k] ? parseFloat(phpData[0][j][k]) : 0;
                       }
                       break;
                     }
@@ -197,6 +288,8 @@
 
                 var data = google.visualization.arrayToDataTable([dataHeader, ...chartData]);
                 
+                
+                var colors = generateColors(dataHeader.length - 1);
 
                 var options = {
                   title: '',
@@ -208,7 +301,8 @@
                         min: 0,
                     }
                   },
-                  legend: { position: 'bottom' }
+                  legend: { position: 'bottom' },
+                  colors: colors
                 };
 
                 var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
@@ -740,7 +834,7 @@
                                 <div class="card">
                                   <div class="row">
                                     <div class="col-md-6">
-                                      <div class="card-header"><h3>Produksi Grower</h3></div>
+                                      <div class="card-header"><h3>Grower</h3></div>
                                     </div>
                                     <div class="col-md-4">
                                       <p class="mt-2 ml-4">Tanggal Hari ini <?= date('m/d/Y') ?></p> <br>
@@ -780,7 +874,7 @@
                                         <div id="mingguan-grower">
                                         <div class="row">
                           
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                           <h5 class="text-center">Lokasi</h5>
                                         <table id="" class="" width="100%">
                                             <thead>
@@ -798,37 +892,21 @@
                                             </tbody>
                                         </table>
                                       </div>
-                                      <div class="col-md-3">
-                          <h5 class="text-center">Telur Butir</h5>
+                                      <div class="col-md-2">
+                          <h5 class="text-center">Usia</h5>
                             <div class="row">
                               
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">Periode saat ini</th>
+                                        <th style="background-color:silver">Minggu</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($produksi_mingguan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->total_butir_telur;?></td>
-                                        </tr>
-                                        <?php }  ?> 
-                                    </tbody>
-                                </table>
-                              </div>
-                              <div class="col-md-6">
-                                <table id="" class="" width="100%">
-                                    <thead>
-                                      <tr>
-                                        <th style="background-color:silver">sebelumnya</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($produksi_mingguan_grower2 as $data) { ?>
-                                        <tr>
-                                          <td><?= $data->total_butir_telur;?></td>
+                                          <td><?= $data->umur;?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
@@ -836,37 +914,21 @@
                               </div>
                             </div>
                           </div>
-                                      <div class="col-md-3">
-                          <h5 class="text-center">Telur Kg</h5>
+                                      <div class="col-md-2">
+                          <h5 class="text-center">Jumlah Populasi</h5>
                             <div class="row">
                               
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">Periode saat ini</th>
+                                        <th style="background-color:silver">Jumlah Populasi</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($produksi_mingguan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->total_kg_telur;?></td>
-                                        </tr>
-                                        <?php }  ?> 
-                                    </tbody>
-                                </table>
-                              </div>
-                              <div class="col-md-6">
-                                <table id="" class="" width="100%">
-                                    <thead>
-                                      <tr>
-                                        <th style="background-color:silver">sebelumnya</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($produksi_mingguan_grower2 as $data) { ?>
-                                        <tr>
-                                          <td><?= $data->total_kg_telur;?></td>
+                                          <td><?= $data->jml_total_ayam;?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
@@ -874,37 +936,65 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-3">
-                          <h5 class="text-center">Kematian</h5>
+                                      <div class="col-md-2">
+                          <h5 class="text-center">Pakan Per Kilo</h5>
                             <div class="row">
                               
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">Periode saat ini</th>
+                                        <th style="background-color:silver">Kg</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($produksi_mingguan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->kematian;?></td>
+                                          <td><?= ($data->pakan_gr_per_ekor * 1000);?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
                                 </table>
                               </div>
-                              <div class="col-md-6">
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                          <h5 class="text-center">Bobot</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">sebelumnya</th>
+                                        <th style="background-color:silver">gr/ekor</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($produksi_mingguan_grower2 as $data) { ?>
+                                        <?php foreach($produksi_mingguan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->kematian;?></td>
+                                          <td><?= $data->bobot_telur_gr_perbutir;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                          <h5 class="text-center">Uniformity</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-12">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Uniformity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_mingguan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->uniformity;?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
@@ -918,7 +1008,7 @@
                                         <div id="bulanan-grower" style="display:none;">
                                         <div class="row">
                           
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                           <h5 class="text-center">Lokasi</h5>
                                         <table id="" class="" width="100%">
                                             <thead>
@@ -936,37 +1026,21 @@
                                             </tbody>
                                         </table>
                                       </div>
-                                      <div class="col-md-3">
-                          <h5 class="text-center">Telur Butir</h5>
+                                      <div class="col-md-2">
+                          <h5 class="text-center">Usia</h5>
                             <div class="row">
                               
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">Periode saat ini</th>
+                                        <th style="background-color:silver">Minggu</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($produksi_bulanan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->total_butir_telur;?></td>
-                                        </tr>
-                                        <?php }  ?> 
-                                    </tbody>
-                                </table>
-                              </div>
-                              <div class="col-md-6">
-                                <table id="" class="" width="100%">
-                                    <thead>
-                                      <tr>
-                                        <th style="background-color:silver">sebelumnya</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($produksi_bulanan_grower2 as $data) { ?>
-                                        <tr>
-                                          <td><?= $data->total_butir_telur;?></td>
+                                          <td><?= $data->umur;?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
@@ -974,37 +1048,21 @@
                               </div>
                             </div>
                           </div>
-                                      <div class="col-md-3">
-                          <h5 class="text-center">Telur Kg</h5>
+                                      <div class="col-md-2">
+                          <h5 class="text-center">Jumlah Populasi</h5>
                             <div class="row">
                               
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">Periode saat ini</th>
+                                        <th style="background-color:silver">Jumlah Populasi</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($produksi_bulanan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->total_kg_telur;?></td>
-                                        </tr>
-                                        <?php }  ?> 
-                                    </tbody>
-                                </table>
-                              </div>
-                              <div class="col-md-6">
-                                <table id="" class="" width="100%">
-                                    <thead>
-                                      <tr>
-                                        <th style="background-color:silver">sebelumnya</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach($produksi_bulanan_grower2 as $data) { ?>
-                                        <tr>
-                                          <td><?= $data->total_kg_telur;?></td>
+                                          <td><?= $data->jml_total_ayam;?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
@@ -1012,37 +1070,65 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-3">
-                          <h5 class="text-center">Kematian</h5>
+                                      <div class="col-md-2">
+                          <h5 class="text-center">Pakan Per Kilo</h5>
                             <div class="row">
                               
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">Periode saat ini</th>
+                                        <th style="background-color:silver">Kg</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($produksi_bulanan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->kematian;?></td>
+                                          <td><?= ($data->pakan_gr_per_ekor * 1000);?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>
                                 </table>
                               </div>
-                              <div class="col-md-6">
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                          <h5 class="text-center">Bobot</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-12">
                                 <table id="" class="" width="100%">
                                     <thead>
                                       <tr>
-                                        <th style="background-color:silver">sebelumnya</th>
+                                        <th style="background-color:silver">gr/ekor</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($produksi_bulanan_grower2 as $data) { ?>
+                                        <?php foreach($produksi_bulanan_grower1 as $data) { ?>
                                         <tr>
-                                          <td><?= $data->kematian;?></td>
+                                          <td><?= $data->bobot_telur_gr_perbutir;?></td>
+                                        </tr>
+                                        <?php }  ?> 
+                                    </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                          <h5 class="text-center">Uniformity</h5>
+                            <div class="row">
+                              
+                            <div class="col-md-12">
+                                <table id="" class="" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th style="background-color:silver">Uniformity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($produksi_bulanan_grower1 as $data) { ?>
+                                        <tr>
+                                          <td><?= $data->uniformity;?></td>
                                         </tr>
                                         <?php }  ?> 
                                     </tbody>

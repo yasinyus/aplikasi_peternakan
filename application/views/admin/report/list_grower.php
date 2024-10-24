@@ -266,25 +266,27 @@
                         <?php // } ?>
                         <?php // } ?>
                         </form>
-                        <a href="<?= base_url('admin/laporan_pdf/grower?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-danger" target="_blank">Download PDF</a>
-                        <a href="<?= base_url('admin/report/xls_grower?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-success" target="_blank">Download XLS</a>
-                        
-                         <div class="row">
-                            <div class="col-12">
+                                                
+                         <div class="row mb-2">
+                            <div class="col-9">
                                 <?php if($_GET['pet'] == "0") { ?>
                                 
                                 <?php } else { ?>
                                 
                                 Filter berdasarkan : <br>
-                                Lokasi : <?= $_GET['pet']?> <br>
-                                Flock : <?= $_GET['flo']?> <br>
-                                Kandang : <?= $_GET['kan']?> <br>
-                                 Periode : <?= isset($_GET['periode']) ? $_GET['periode'] . ' Hari Terakhir' : 'Custom' ?><br>
-                                Tgl Awal : <?= $_GET['tgl_awal']?> <br>
-                                Tgl Akhir : <?= $_GET['tgl_akhir']?> <br>
+                                Lokasi : <?= $_GET['pet']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Flock : <?= $_GET['flo']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Kandang : <?= $_GET['kan']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                 Periode : <?= isset($_GET['periode']) ? $_GET['periode'] . ' Hari Terakhir' : 'Custom' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Tgl Awal : <?= $_GET['tgl_awal']?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Tgl Akhir : <?= $_GET['tgl_akhir']?> &nbsp;&nbsp;
                                 
                                 <?php } ?>
                             </div>
+                            <div class="col-3 left-0">
+                                <a href="<?= base_url('admin/laporan_pdf/grower?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-danger" target="_blank">Download PDF</a>
+                                <a href="<?= base_url('admin/report/xls_grower?').'peternakan_id='.$this->input->get('peternakan_id').'&flock_id='.$this->input->get('flock_id').'&kandang_id='.$this->input->get('kandang_id').'&tgl_awal='.$this->input->get('tgl_awal').'&tgl_akhir='.$this->input->get('tgl_akhir') ?>" class="btn btn-success" target="_blank">Download XLS</a>
+                            </div>  
                         </div>
                         
                         <style>
@@ -318,9 +320,9 @@
                                                 <th>Standard</th>
                                                 <th>Real</th>
                                                 <th>Standard</th>
-                                                <th rowspan="2">Nama Obat</th>
                                                 <th rowspan="2">Nama Pakan</th>
-                                                <th rowspan="2">Vitamin</th>
+                                                <th rowspan="2">Obat / Vitamin</th>
+                                                <th rowspan="2">Vaksin</th>
                                             </tr>
                                             <tr>
                                                 
@@ -358,6 +360,8 @@
                                                 <td><?= $data['uniformity'];?></td>
                                                 <td></td>
                                                 <td><?= $data['perlakuan'];?></td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                             <?php }  ?> 
                                             </tbody>

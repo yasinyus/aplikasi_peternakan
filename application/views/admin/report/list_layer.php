@@ -314,7 +314,8 @@
                                                 <th colspan="2">Deplesi</th>
                                                 <th colspan="4">Konsumsi Pakan</th>
                                                 <th colspan="4">Produksi Telur</th>
-                                                <th colspan="6">Performa Produksi</th>
+                                                <th colspan="4">Performa Produksi</th>
+                                                <th colspan="3">Keterangan</th>
                                                 
                                             </tr>
                                             <tr> 
@@ -331,6 +332,9 @@
                                                 <th rowspan="3" colspan="1">%HD</th>
                                                 <th rowspan="3">FCR</th>
                                                 <!--<th rowspan="3">Egg Mass Cum</th>-->
+                                                <th rowspan="3">Nama Pakan</th>
+                                                <th rowspan="3">Obat / Vitamin</th>
+                                                <th rowspan="3">Vaksin</th>
                                             </tr>
                                             <tr>
                                                 <th rowspan="2">Total Kg</th>
@@ -381,6 +385,9 @@
                                                     <!--<td></td>-->
                                                     <td><?= $data['fcr'];?></td>
                                                     <!--<td><?= $data['egg_mass_comulative'];?></td>-->
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                                  <?php }  ?> 
                                             </tbody>
