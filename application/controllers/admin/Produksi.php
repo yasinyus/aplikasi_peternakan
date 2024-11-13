@@ -225,7 +225,10 @@ class Produksi extends CI_Controller
 					// 'sisa_ayam_perkandang'    => $jml_ayam_perkandang,
 					'uniformity'     	=> $this->input->post('uniformity'),
 					'perlakuan'     	=> $this->input->post('perlakuan'),
-					'jenis_produksi'    => "grower"
+					'jenis_produksi'    => "grower",
+					'nama_obat'     	=> $this->input->post('nama_obat'),
+					'nama_pakan'     	=> $this->input->post('nama_pakan'),
+					'vitamin'     	    => $this->input->post('vitamin'),
 				];
 
 				$data_update_flock = [
@@ -276,6 +279,7 @@ class Produksi extends CI_Controller
 			} else {
 
 			$jml_ayam_perkandang = $this->kandang_model->detail_kandang($this->input->post('kandang_id'))->jumlah_ayam;
+		
 			if($this->input->post('kematian') == "" || $this->input->post('kematian') == NULL){
 				$ayam_mati = 0;
 			} else {
@@ -325,6 +329,17 @@ class Produksi extends CI_Controller
 			$umur_hari = $d + $q->usia_ayam;
 			$umur_week = round($umur_hari / 7, 1);
 			
+			$pakan = $this->input->post('pakan_kg');
+			$pakan_gr_perekor = $pakan / $sisa_ayam;
+			$minum = $this->input->post('minum_liter');
+			$minum_ml_perekor = $minum / $sisa_ayam;
+			
+// 			echo $pakan .' -- ' . $sisa_ayam. ' -- ' .$pakan_gr_perekor * 1000 ;
+// 			die();
+			
+	        
+			
+			
 
 			if (isset($_POST['submit'])) {
 				$data = [
@@ -353,10 +368,10 @@ class Produksi extends CI_Controller
 					'egg_mass_comulative' 			=> $egg_mass_comulative,
 					'mort' 							=> $mort,
 					
-					'pakan_kg' 	  		=> $this->input->post('pakan_kg'),
-					'pakan_gr_per_ekor' => $this->input->post('pakan_kg') / $jml_ayam_perkandang,
-					'minum_liter'   	=> $this->input->post('minum_liter'),
-					'minum_ml_per_ekor' => $this->input->post('minum_liter') / $jml_ayam_perkandang,
+					'pakan_kg' 	  		=> $pakan,
+					'pakan_gr_per_ekor' => $pakan_gr_perekor * 1000,
+					'minum_liter'   	=> $minum,
+					'minum_ml_per_ekor' => $minum_ml_perekor * 1000,
 					'bobot_ayam'     	=> $this->input->post('bobot_ayam'),
 					'kematian'     		=> $this->input->post('kematian'),
 					'afkir'     		=> $this->input->post('afkir'),
@@ -364,8 +379,16 @@ class Produksi extends CI_Controller
 					'jml_total_ayam'    => $sisa_ayam,
 					// 'uniformity'     	=> $this->input->post('uniformity'),
 					'perlakuan'     	=> $this->input->post('perlakuan'),
-					'jenis_produksi'    => "layer"
+					'jenis_produksi'    => "layer",
+					'nama_obat'     	=> $this->input->post('nama_obat'),
+					'nama_pakan'     	=> $this->input->post('nama_pakan'),
+					'vitamin'     	    => $this->input->post('vitamin'),
 				];
+				
+				// echo $pakan_gr_perekor * 1000 . ' - ' . $minum_ml_perekor * 1000;
+	   //         die();
+				
+				
 
 				$data_update_flock = [
 					'id' 	  			=> $this->input->post('flock_id'),
@@ -478,6 +501,9 @@ class Produksi extends CI_Controller
 				'kematian'     		=> $this->input->post('kematian'),
 				'afkir'     		=> $this->input->post('afkir'),
 				'perlakuan'     	=> $this->input->post('perlakuan'),
+				'nama_obat'     	=> $this->input->post('nama_obat'),
+				'nama_pakan'     	=> $this->input->post('nama_pakan'),
+				'vitamin'     	    => $this->input->post('vitamin'),
 			];
 			
 			$this->produksi_model->update($data);
@@ -505,6 +531,9 @@ class Produksi extends CI_Controller
 				'afkir'     		=> $this->input->post('afkir'),
 				'uniformity'     	=> $this->input->post('uniformity'),
 				'perlakuan'     	=> $this->input->post('perlakuan'),
+				'nama_obat'     	=> $this->input->post('nama_obat'),
+				'nama_pakan'     	=> $this->input->post('nama_pakan'),
+				'vitamin'     	    => $this->input->post('vitamin'),
 			];
 			
 			$this->produksi_model->update($data);

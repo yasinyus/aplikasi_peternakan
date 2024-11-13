@@ -35,7 +35,7 @@ class Dashboard extends CI_Controller
 	  	$this->db->select('prov');
 		$this->db->select_sum('jumlah_ayam', 'count');
 		$this->db->from('kandang');
-		$this->db->join('peternakan', 'peternakan.id_peternakan = kandang.peternakan_id', 'left');
+		$this->db->join('peternakan', 'peternakan.id_peternakan = kandang.peternakan_id', 'right');
 		$this->db->where('user_id', $this->session->userdata('id'));
 		// $this->db->where('jenis_produksi', 'layer');
 		if($this->session->userdata('tipe_user') == 'admin_input' || $this->session->userdata('tipe_user') == 'super_user'){ 
@@ -152,4 +152,3 @@ class Dashboard extends CI_Controller
 
 	
 }
-

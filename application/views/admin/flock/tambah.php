@@ -63,7 +63,7 @@
 													<option value="">Pilih Lokasi</option>
 													<?php
 													foreach ($peternakan as $peternakan) {
-														echo '<option value="' . $peternakan->id_peternakan . '">' . $peternakan->kel . ', ' . $peternakan->prov . ' - '. $peternakan->tipe_peternakan .  '</option>';
+														echo '<option value="' . $peternakan->id_peternakan . '">' . $peternakan->nama_peternakan . '</option>';
 													}
 													?>
 													</select>

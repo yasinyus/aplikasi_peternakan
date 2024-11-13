@@ -3,6 +3,7 @@
                         border: 1px solid black;
                         border-collapse: collapse;
                         text-align: center;
+                        font-size:10px;
                         }
                         </style>
                         <h3>Laporan Produksi Grower</h3>
@@ -17,6 +18,9 @@
                                                 <th colspan="2">Bobot Ayam</th>
                                                 <th colspan="2">Uniformity</th>
                                                 <th rowspan="3">Keterangan</th>
+                                                <th rowspan="3">Nama Obat</th>
+                                                <th rowspan="3">Nama Pakan</th>
+                                                <th rowspan="3">Vitamin</th>
                                             </tr>
                                             <tr>
                                                 <th rowspan="2">Umur (Week)</th>
@@ -71,6 +75,9 @@
                                                 <td><?= $data['uniformity'];?></td>
                                                 <td></td>
                                                 <td><?= $data['perlakuan'];?></td>
+                                                 <td><?= $data['nama_obat'];?></td>
+                                                    <td><?= $data['nama_pakan'];?></td>
+                                                    <td><?= $data['vitamin'];?></td>
                                             </tr>
                                             <?php }  ?> 
                                             </tbody>

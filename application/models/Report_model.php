@@ -15,6 +15,10 @@ class Report_model extends CI_Model {
 	
 		// $this->db->select('*');
 		$this->db->select('tanggal_prod');
+		$this->db->select('flock.usia_ayam');
+		$this->db->select('nama_obat');
+		$this->db->select('nama_pakan');
+		$this->db->select('vitamin');
 		$this->db->select_sum('jml_total_ayam');
 		$this->db->select_sum('jml_utuh_butir');
 		$this->db->select_sum('jml_utuh_kg');
@@ -97,6 +101,11 @@ class Report_model extends CI_Model {
 	   // die();
 		// $this->db->select('*');
 		$this->db->select('tanggal_prod');
+		$this->db->select('flock.usia_ayam');
+		$this->db->select('flock.tanggal');
+		$this->db->select('nama_obat');
+		$this->db->select('nama_pakan');
+		$this->db->select('vitamin');
 		$this->db->select_sum('pakan_gr_per_ekor');
 		$this->db->select_sum('minum_ml_per_ekor');
 		$this->db->select_sum('total_butir_telur');
@@ -165,6 +174,9 @@ class Report_model extends CI_Model {
 	{
 		// $this->db->select('*');
 		$this->db->select('tanggal_prod');
+		$this->db->select('nama_obat');
+		$this->db->select('nama_pakan');
+		$this->db->select('vitamin');
 		$this->db->select_sum('jml_total_ayam');
 		$this->db->select_sum('jml_utuh_butir');
 		$this->db->select_sum('jml_utuh_kg');
@@ -286,20 +298,23 @@ class Report_model extends CI_Model {
 		return $query->row();
 	}
 	
+	
 	// Get tanggal
 	public function get_tanggal_for_fase_layer($id_peternakan)
 	{
 		$query = $this->db->select('tanggal_prod')->where('peternakan_id', $id_peternakan)->get('produksi')->result();
 		$tanggal_produksi = array_column($query, 'tanggal_prod');
-        return $tanggal_produksi;
+         return $tanggal_produksi;
 	}
-
 	public function get_tanggal_for_fase_grower($id_peternakan)
 	{
 		$query = $this->db->select('tanggal_prod')->where('peternakan_id', $id_peternakan)->get('produksi')->result();
 		$tanggal_produksi = array_column($query, 'tanggal_prod');
         return $tanggal_produksi;
 	}
+	
+	
+	
 
 	// Tambah
 	public function insert_grower($data)

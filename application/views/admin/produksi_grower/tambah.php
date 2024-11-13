@@ -1,4 +1,4 @@
-				<div class="main-content">
+<div class="main-content">
                     <div class="container-fluid">
                         <div class="page-header">
                             <div class="row align-items-end">
@@ -207,4 +207,3 @@
 							})
 						});
 					</script>
-

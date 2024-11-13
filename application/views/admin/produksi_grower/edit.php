@@ -122,6 +122,24 @@
                                                     <textarea name="perlakuan" class="form-control"><?= $produksi_grower->perlakuan ?></textarea>
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-3 col-form-label">Nama Obat (Opsional)</label>
+												<div class="col-sm-9">
+                                                    <input type="text"  name="nama_obat" class="form-control" value="<?= $produksi_grower->nama_obat ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-3 col-form-label">Nama Pakan (Opsional)</label>
+												<div class="col-sm-9">
+                                                    <input type="text"  name="nama_pakan" class="form-control" value="<?= $produksi_grower->nama_pakan ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-3 col-form-label">Vitamin (Opsional)</label>
+												<div class="col-sm-9">
+                                                    <input type="text"  name="vitamin" class="form-control" value="<?= $produksi_grower->vitamin ?>">
+                                                </div>
+                                            </div>
 
 											
 											<a href="<?= base_url('admin/produksi/grower') ?>" class="btn btn-success"><i class="fa fa-arrow-left"></i> Kembali</a>

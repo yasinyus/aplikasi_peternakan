@@ -124,11 +124,18 @@ class Report extends CI_Controller
 // 			->where('DATE(tanggal_prod) <=',$filter['tgl_akhir'])
 // 			->get();
 
+            $get_nama_peternakan = $this->db->select('*')->from('peternakan')->where('id_peternakan', $filter['peternakan_id'])->get();
+            $get_flock = $this->db->select('*')->from('flock')->where('id', $filter['flock_id'])->get();
+            $get_kandang = $this->db->select('*')->from('kandang')->where('id', $filter['kandang_id'])->get();
+            
 			$id_peternakan = $get_peternakan->result()[0]->id_peternakan;
 			$produksi_layer 	= $this->report_model->list_produksi_layer($filter);
 			$tanggal_prod 	= $this->report_model->get_tanggal_for_fase_layer($id_peternakan);
 			$data = array(
+				'get_nama_peternakan'	=> $get_nama_peternakan->result(),
 				'peternakan'	=> $get_peternakan->result(),
+				'get_flock'	=> $get_flock->result(),
+				'get_kandang'	=> $get_kandang->result(),
 				'produksi'		=> $produksi_layer,	
 				'tanggal_prod'		=> $tanggal_prod,	
 				'isi'		=> 'admin/report/list_layer'
@@ -331,7 +338,10 @@ class Report extends CI_Controller
 				->setCellValue('O2', '%HD Real')
 				// ->setCellValue('Q2', '%HD Week')
 				// ->setCellValue('R2', '%HD Target')
-				->setCellValue('Q2', 'FCR');
+				->setCellValue('Q2', 'FCR')
+				->setCellValue('R2', 'Nama Obat')
+				->setCellValue('S2', 'Nama Pakan')
+				->setCellValue('T2', 'Vitamin');
 				// ->setCellValue('T2', 'Egg mass cum');
 				$i = 1;
 				foreach ($produksi_layer as $data) {
@@ -355,7 +365,10 @@ class Report extends CI_Controller
 							->setCellValue('P' . $nomor, $data['hd']." %")
 				// 			->setCellValue('Q' . $nomor, '')
 				// 			->setCellValue('R' . $nomor, '')
-							->setCellValue('Q' . $nomor, $data['fcr']);
+							->setCellValue('Q' . $nomor, $data['fcr'])
+							->setCellValue('R' . $nomor, $data['nama_obat'])
+							->setCellValue('S' . $nomor, $data['nama_pakan'])
+							->setCellValue('T' . $nomor, $data['vitamin']);
 				// 			->setCellValue('T' . $nomor, $data['egg_mass_comulative']);
 					$i++;
 				}
@@ -424,7 +437,10 @@ class Report extends CI_Controller
 				->setCellValue('M2', 'Bobot Standar')
 				->setCellValue('N2', 'Uniform Real')
 				->setCellValue('O2', 'Uniform Standar')
-				->setCellValue('P2', 'Keterangan');
+				->setCellValue('P2', 'Keterangan')
+				->setCellValue('R2', 'Nama Obat')
+				->setCellValue('R2', 'Nama Pakan')
+				->setCellValue('S2', 'Vitamin');
 				$i = 1;
 				foreach ($produksi_layer as $data) {
 					if($data['bobot_ayam'] >= 1.400 && $this->input->get('flock_id') != NULL){
@@ -450,7 +466,10 @@ class Report extends CI_Controller
 							->setCellValue('M' . $nomor, '')
 							->setCellValue('N' . $nomor, $data['uniformity'])
 							->setCellValue('O' . $nomor, '')
-							->setCellValue('P' . $nomor, $data['perlakuan']);
+							->setCellValue('P' . $nomor, $data['perlakuan'])
+							->setCellValue('Q' . $nomor, $data['nama_obat'])
+							->setCellValue('R' . $nomor, $data['nama_pakan'])
+							->setCellValue('S' . $nomor, $data['vitamin']);
 					$i++;
 				}
 
@@ -900,4 +919,3 @@ class Report extends CI_Controller
 	}
 
 }
-
